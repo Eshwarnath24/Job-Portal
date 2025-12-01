@@ -17,7 +17,7 @@ const Navbar = () => {
                         <div className='flex gap-4 max-sm:text-xs'>
                             <Link to={'/applied-jobs'}>Applied Jobs</Link>
                             <p>|</p>
-                            <p>Hi, {(user.firstName || "") + " " + (user.lastName || "")}</p>
+                            <p className='max-sm:hidden'>Hi, {(user.firstName || "") + " " + (user.lastName || "")}</p>
                             <UserButton /> {/* user profile*/}
                         </div>
                         :
