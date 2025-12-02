@@ -4,7 +4,7 @@ import { AppContext } from '../context/AppContext'
 
 const Hero = () => {
 
-    const {setIsSearched, setSearchFilter} = useContext(AppContext);
+    const { setIsSearched, setSearchFilter } = useContext(AppContext);
 
     const titleRef = useRef(null);
     const locationRef = useRef(null);
@@ -25,28 +25,43 @@ const Hero = () => {
 
     return (
         <div className='flex flex-col items-center'>
-            <div class="flex items-center justify-center p-4 my-10 mx-20">
-                <div class="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-[2rem] p-12 w-full max-w-5xl text-center flex flex-col items-center">
-                    <h1 class="text-white text-4xl sm:text-5xl font-bold mb-6">Over 10,000+ jobs to apply</h1>
-                    <p class="text-purple-200 text-lg sm:text-xl max-w-3xl mb-10">Your Next Big Career Move Starts Right Here - Explore The Best Job Opportunities And Take The First Step Toward Your Future!</p>
+            <div className="flex items-center justify-center p-4 my-10 mx-20">
+                <div className="bg-gradient-to-r from-purple-900 to-indigo-900 rounded-[2rem] p-12 w-full max-w-5xl text-center flex flex-col items-center">
+                    <h1 className="text-white text-4xl sm:text-5xl font-bold mb-6">Over 10,000+ jobs to apply</h1>
+                    <p className="text-purple-200 text-lg sm:text-xl max-w-3xl mb-10">Your Next Big Career Move Starts Right Here - Explore The Best Job Opportunities And Take The First Step Toward Your Future!</p>
 
-                    <div class="bg-white p-2 rounded-md flex items-center w-full max-w-4xl shadow-lg">
-                        <div class="flex items-center flex-1 px-4">
-                            <img src={assets.search_icon} alt="" className='w-5 h-5 opacity-60 mr-3' />
-                            <input ref={titleRef} type="text" placeholder="Search for jobs" class="w-full outline-none text-gray-700 placeholder-gray-400" />
+                    <div className="bg-white p-2 rounded-md flex flex-col sm:flex-row items-center w-full max-w-4xl shadow-lg gap-3 sm:gap-0">
+
+                        <div className="flex items-center flex-1 px-4 w-full">
+                            <img src={assets.search_icon} alt="" className="w-5 h-5 opacity-60 mr-3" />
+                            <input
+                                ref={titleRef}
+                                type="text"
+                                placeholder="Search for jobs"
+                                className="w-full outline-none text-gray-700 placeholder-gray-400"
+                            />
                         </div>
 
-                        <div class="h-8 w-px bg-gray-300 mx-2"></div>
+                        <div className="hidden sm:block h-8 w-px bg-gray-300 mx-2"></div>
 
-                        <div class="flex items-center flex-1 px-4">
-                            <img src={assets.location_icon} alt="" className='w-5 h-5 opacity-60 mr-3' />
-                            <input ref={locationRef} type="text" placeholder="Location" class="w-full outline-none text-gray-700 placeholder-gray-400" />
+                        <div className="flex items-center flex-1 px-4 w-full">
+                            <img src={assets.location_icon} alt="" className="w-5 h-5 opacity-60 mr-3" />
+                            <input
+                                ref={locationRef}
+                                type="text"
+                                placeholder="Location"
+                                className="w-full outline-none text-gray-700 placeholder-gray-400"
+                            />
                         </div>
 
-                        <button onClick={onSearch} class="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-8 py-3 transition">
+                        <button
+                            onClick={onSearch}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-md px-8 py-3 w-full sm:w-auto transition"
+                        >
                             Search
                         </button>
                     </div>
+
                 </div>
             </div>
 
