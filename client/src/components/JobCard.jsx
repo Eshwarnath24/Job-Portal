@@ -1,7 +1,11 @@
 import React from 'react'
 import { assets } from '../assets/assets'
+import { useNavigate } from 'react-router-dom'
 
 const JobCard = ({ key, job }) => {
+
+  const navigate = useNavigate();
+
   return (
     <div key={key} className='border border-grey-200 shadow-md p-6 rounded-md'>
       <div className='flex justify-between items-center'>
@@ -12,10 +16,10 @@ const JobCard = ({ key, job }) => {
         <span className='bg-blue-50 border border-blue-200 px-4 py-1.5 rounded-md mr-2'>{job.location}</span>
         <span className='bg-red-50 border border-red-200 px-4 py-1.5 rounded-md mr-2'>{job.level}</span>
       </div>
-      <p dangerouslySetInnerHTML={{__html: job.description.slice(0, 150)}}></p>
+      <p dangerouslySetInnerHTML={{__html: job.description.slice(0, 150)}} className='min-h-28'></p>
       <div className='text-sm flex gap-4 mt-2'>
-        <button className='bg-blue-500 text-white px-5 py-1.5 rounded-md'>Apply Now</button>
-        <button className='border border-gray-500 text-gray-500 px-5 py-1.5 rounded-md'>Learn More</button>
+        <button onClick={() => {navigate(`apply-job/${job._id}`); scrollTo(0, 0)}} className='bg-blue-500 text-white px-5 py-1.5 rounded-md'>Apply Now</button>
+        <button onClick={() => {navigate(`apply-job/${job._id}`); scrollTo(0, 0)}} className='border border-gray-500 text-gray-500 px-5 py-1.5 rounded-md'>Learn More</button>
       </div>
     </div>
   )
