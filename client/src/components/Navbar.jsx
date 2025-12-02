@@ -14,7 +14,7 @@ const Navbar = () => {
                 <img src={assets.logo} alt="" />
                 {
                     user ?
-                        <div className='flex gap-4 max-sm:text-xs'>
+                        <div className='flex items-center gap-4 max-sm:text-xs'>
                             <Link to={'/applied-jobs'}>Applied Jobs</Link>
                             <p>|</p>
                             <p className='max-sm:hidden'>Hi, {(user.firstName || "") + " " + (user.lastName || "")}</p>
