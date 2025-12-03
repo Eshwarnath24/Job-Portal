@@ -18,7 +18,7 @@ const Navbar = () => {
                 {
                     user ?
                         <div className='flex items-center gap-4 max-sm:text-xs'>
-                            <Link className='max-sm:hidden border-r pr-5 border-r-gray-700 max-sm:border-r-0' to={'/applied-jobs'}>Applied Jobs</Link>
+                            <Link onClick={() => navigate('/applied-jobs')} className='max-[400px]:hidden border-r pr-5 border-r-gray-700 max-[400px]:border-r-0' to={'/applied-jobs'}>Applied Jobs</Link>
                             <p className='max-sm:hidden'>Hi, {(user.firstName || "") + " " + (user.lastName || "")}</p>
                             <UserButton /> {/* user profile*/}
                         </div>
