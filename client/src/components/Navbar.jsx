@@ -3,20 +3,22 @@ import { Menu, X, Rocket } from 'lucide-react';
 import { useClerk, UserButton, useUser } from '@clerk/clerk-react'
 import { Link } from 'react-router-dom';
 import { assets } from '../assets/assets';
+import { useNavigate } from 'react-router-dom'
+
 
 const Navbar = () => {
     const { openSignIn } = useClerk();
     const { user } = useUser();
+    const navigate = useNavigate();
 
     return (
         <div className='shadow py-4'>
             <div className='container px-4 2xl:px-20 mx-auto flex justify-between items-center'>
-                <img src={assets.logo} alt="" />
+                <img onClick={() => navigate('/')} src={assets.logo} alt="" />
                 {
                     user ?
                         <div className='flex items-center gap-4 max-sm:text-xs'>
-                            <Link to={'/applied-jobs'}>Applied Jobs</Link>
-                            <p>|</p>
+                            <Link className='max-sm:hidden border-r pr-5 border-r-gray-700 max-sm:border-r-0' to={'/applied-jobs'}>Applied Jobs</Link>
                             <p className='max-sm:hidden'>Hi, {(user.firstName || "") + " " + (user.lastName || "")}</p>
                             <UserButton /> {/* user profile*/}
                         </div>
