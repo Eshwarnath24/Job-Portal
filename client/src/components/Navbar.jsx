@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Menu, X, Rocket } from 'lucide-react';
 import { useClerk, UserButton, useUser } from '@clerk/clerk-react'
 import { Link } from 'react-router-dom';
 import { assets } from '../assets/assets';
 import { useNavigate } from 'react-router-dom'
+import { AppContext } from '../context/AppContext';
 
 
 const Navbar = () => {
     const { openSignIn } = useClerk();
     const { user } = useUser();
     const navigate = useNavigate();
+    const { setShowRecruiterLogin } = useContext(AppContext);
 
     return (
         <div className='shadow py-4'>
@@ -24,7 +26,7 @@ const Navbar = () => {
                         </div>
                         :
                         <div className='flex gap-4 max-sm:text-xs'>
-                            <button className='text-gray-600'>Recruiter Login</button>
+                            <button onClick={() => setShowRecruiterLogin(true)} className='text-gray-600'>Recruiter Login</button>
                             <button
                                 onClick={() => openSignIn()}
                                 className='bg-blue-600 text-white px-6 py-2 rounded-full'
@@ -33,7 +35,6 @@ const Navbar = () => {
                             </button>
                         </div>
                 }
-
             </div>
         </div>
     );
