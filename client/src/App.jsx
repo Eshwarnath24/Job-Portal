@@ -13,6 +13,9 @@ import AddJob from './pages/AddJob'
 import ManageJobs from './pages/ManageJobs'
 import Applications from './pages/Applications'
 
+import 'react-quill/dist/quill.snow.css'
+
+
 const App = () => {
 
   const { showRecruiterLogin } = useContext(AppContext);
