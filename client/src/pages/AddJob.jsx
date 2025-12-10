@@ -56,7 +56,7 @@ const AddJob = () => {
           <label className="text-sm font-medium">Job Description</label>
           <div
             ref={editorRef}
-            className="w-full border rounded-md mt-1 min-h-[150px] bg-white"
+            className="w-full border mt-1 min-h-[150px] bg-white"
           ></div>
         </div>
 
