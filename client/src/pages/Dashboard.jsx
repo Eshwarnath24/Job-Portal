@@ -30,7 +30,6 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* 👇 THIS IS IMPORTANT FIX */}
       <div className="flex flex-1 min-h-full">
 
         {/* Sidebar */}
@@ -46,7 +45,7 @@ const Dashboard = () => {
                   }`
                 }
               >
-                <img className="min-w-4" src={assets.add_icon} alt="" />
+                <img className="w-4" src={assets.add_icon} alt="" />
                 <p className="max-sm:hidden">Add Job</p>
               </NavLink>
             </li>
@@ -60,7 +59,7 @@ const Dashboard = () => {
                   }`
                 }
               >
-                <img className="min-w-4" src={assets.home_icon} alt="" />
+                <img className="w-4" src={assets.home_icon} alt="" />
                 <p className="max-sm:hidden">Manage Jobs</p>
               </NavLink>
             </li>
@@ -74,7 +73,7 @@ const Dashboard = () => {
                   }`
                 }
               >
-                <img className="min-w-4" src={assets.person_tick_icon} alt="" />
+                <img className="w-4" src={assets.person_tick_icon} alt="" />
                 <p className="max-sm:hidden">View Applications</p>
               </NavLink>
             </li>
