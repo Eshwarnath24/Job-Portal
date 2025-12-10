@@ -25,7 +25,7 @@ const Applications = () => {
 
               <td className="py-2 px-4 text-center">{index + 1}</td>
               <td className="py-2 px-4 text-center flex items-center gap-2">
-                <img src={application.imgSrc} alt="" className="w-10 h-10 rounded-full max-sm:hidden" />
+                <img src={application.imgSrc} alt="" className="w-10 h-10 rounded-full max-[875px]:hidden" />
                 <p>
                   {application.name}
                 </p>
