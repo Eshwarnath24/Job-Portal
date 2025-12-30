@@ -14,6 +14,7 @@ await connectDB();
 
 // middleware
 app.use(cors());
+// Use JSON parser for normal routes
 app.use(express.json());
 
 // Routes
@@ -24,9 +25,8 @@ app.get('/', (req, res) => {
 app.get("/debug-sentry", function mainHandler(req, res) {
   throw new Error("My first Sentry error!");
 });
-// add webhooks
-app.post("/webhooks", clerkWebhooks);
 
+app.post('/webhooks', clerkWebhooks);
 
 // PORT
 const PORT = process.env.PORT || 5000;

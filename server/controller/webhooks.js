@@ -8,26 +8,28 @@ export const clerkWebhooks = async (req, res) => {
     const whook = new Webhook(process.env.CLERK_WEBHOOK_SECRET);
 
     // Verifying Headers
+    // `req.body` is a raw Buffer because we used `express.raw` on the route.
     await whook.verify(JSON.stringify(req.body), {
       "svix-id": req.headers["svix-id"],
       "svix-timestamp": req.headers["svix-timestamp"],
       "svix-signature": req.headers["svix-signature"],
     });
 
-    //getting data from request body
+    // Parse payload after verification
     const { data, type } = req.body;
 
     switch (type) {
         case 'user.created': {
             
+            // Safely build user data with fallbacks to avoid validation errors
             const userData = {
-                _id: data.id,
-                email: data.email_addresses[0].email_address,
-                name: data.first_name + data.last_name,
-                image: data.image_url,
-                resume: ""
+              _id: data.id,
+              email: (data.email_addresses && data.email_addresses[0] && data.email_addresses[0].email_address) || "",
+              name: ((data.first_name || "") + " " + (data.last_name || "")).trim(),
+              image: data.image_url || "",
+              resume: ""
             };
-            
+
             await User.create(userData);
             res.json({message: "user created"});
 
@@ -37,12 +39,12 @@ export const clerkWebhooks = async (req, res) => {
         case 'user.updated': {
             
             const userData = {
-                email: data.email_addresses[0].email_address,
-                name: data.first_name + data.last_name,
-                image: data.image_url,
+              email: (data.email_addresses && data.email_addresses[0] && data.email_addresses[0].email_address) || undefined,
+              name: ((data.first_name || "") + " " + (data.last_name || "")).trim() || undefined,
+              image: data.image_url || undefined,
             };
-            
-            await User.findByIdAndUpdate(data.id, userData);
+
+            await User.findByIdAndUpdate(data.id, userData, { new: true, upsert: false });
             res.json({message: "user data updated"});
 
             break;
