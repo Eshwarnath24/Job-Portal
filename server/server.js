@@ -9,12 +9,23 @@ import { clerkWebhooks } from './controller/webhooks.js';
 // initialize express
 const app = express();
 
+/* =======================
+   ORIGINAL CODE (COMMENTED)
+   ======================= */
+
 // connect to database
-await connectDB();
+// ❌ DO NOT use top-level await in Vercel serverless
+// await connectDB();
+
+/* =======================
+   FIXED VERSION (Vercel-safe)
+   ======================= */
+
+// ✅ Non-blocking DB connection for serverless
+connectDB();
 
 // middleware
 app.use(cors());
-// Use JSON parser for normal routes
 app.use(express.json());
 
 // Routes
@@ -28,11 +39,23 @@ app.get("/debug-sentry", function mainHandler(req, res) {
 
 app.post('/webhooks', clerkWebhooks);
 
-// PORT
-const PORT = process.env.PORT || 5000;
+/* =======================
+   ORIGINAL CODE (COMMENTED)
+   ======================= */
+
+// PORT is NOT used in Vercel
+// const PORT = process.env.PORT || 5000;
+
+// ❌ Vercel does not allow app.listen()
+// app.listen(PORT, () => {
+//     console.log("server is listening on port " + PORT);
+// });
+
+/* =======================
+   CORRECT SERVERLESS END
+   ======================= */
 
 Sentry.setupExpressErrorHandler(app);
 
-app.listen(PORT, () => {
-    console.log("server is listening on port " + PORT);
-});
+// ✅ Export app for Vercel
+export default app;
