@@ -24,6 +24,13 @@ const app = express();
 // ✅ Non-blocking DB connection for serverless
 connectDB();
 
+
+app.post(
+  '/webhooks',
+  express.raw({ type: 'application/json' }),
+  clerkWebhooks
+);
+
 // middleware
 app.use(cors());
 app.use(express.json());
@@ -37,7 +44,7 @@ app.get("/debug-sentry", function mainHandler(req, res) {
   throw new Error("My first Sentry error!");
 });
 
-app.post('/webhooks', clerkWebhooks);
+// app.post('/webhooks', clerkWebhooks);
 
 /* =======================
    ORIGINAL CODE (COMMENTED)
