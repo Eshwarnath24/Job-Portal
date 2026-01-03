@@ -5,6 +5,7 @@ import 'dotenv/config'
 import connectDB from "./config/db.js";
 import * as Sentry from "@sentry/node"
 import { clerkWebhooks } from './controller/webhooks.js';
+import companyRoutes from './routes/companyRoutes.js'
 
 // initialize express
 const app = express();
@@ -30,6 +31,8 @@ app.post(
   express.raw({ type: 'application/json' }),
   clerkWebhooks
 );
+
+app.use('/api/company', companyRoutes);
 
 // middleware
 app.use(cors());
