@@ -7,12 +7,13 @@ import {
   loginCompany,
   postJob,
   registerCompany,
-} from "../controller/companyControllers.js";
+} from "../controller/companyController.js";
+import upload from "../config/multer.js";
 
 const router = express.Router();
 
 // Register a company
-router.post("/register", registerCompany);
+router.post("/register", upload.single('image'), registerCompany);
 
 // Company login
 router.post("/login", loginCompany);
@@ -21,7 +22,7 @@ router.post("/login", loginCompany);
 router.get("/company", getCompanyData);
 
 // post a job
-router.get("/post-job", postJob);
+router.post("/post-job", postJob);
 
 // get data from company
 router.get("/applicants", getCompanyData);

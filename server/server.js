@@ -6,6 +6,7 @@ import connectDB from "./config/db.js";
 import * as Sentry from "@sentry/node"
 import { clerkWebhooks } from './controller/webhooks.js';
 import companyRoutes from './routes/companyRoutes.js'
+import connectCloudinary from './config/cloudinary.js';
 
 // initialize express
 const app = express();
@@ -23,7 +24,12 @@ const app = express();
    ======================= */
 
 // ✅ Non-blocking DB connection for serverless
+
+app.use(cors());
+app.use(express.json());
+
 connectDB();
+connectCloudinary();
 
 
 app.post(
@@ -32,11 +38,9 @@ app.post(
   clerkWebhooks
 );
 
-app.use('/api/company', companyRoutes);
-
 // middleware
-app.use(cors());
-app.use(express.json());
+
+app.use('/api/company', companyRoutes);
 
 // Routes
 app.get('/', (req, res) => {
