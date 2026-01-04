@@ -12,25 +12,22 @@ import connectCloudinary from './config/cloudinary.js';
 const app = express();
 
 /* =======================
-   ORIGINAL CODE (COMMENTED)
+   GLOBAL MIDDLEWARE
    ======================= */
-
-// connect to database
-// ❌ DO NOT use top-level await in Vercel serverless
-// await connectDB();
-
-/* =======================
-   FIXED VERSION (Vercel-safe)
-   ======================= */
-
-// ✅ Non-blocking DB connection for serverless
 
 app.use(cors());
 app.use(express.json());
 
+/* =======================
+   DB + CLOUDINARY
+   ======================= */
+
 connectDB();
 connectCloudinary();
 
+/* =======================
+   CLERK WEBHOOK (RAW BODY)
+   ======================= */
 
 app.post(
   '/webhooks',
@@ -38,38 +35,43 @@ app.post(
   clerkWebhooks
 );
 
-// middleware
+/* =======================
+   API ROUTES
+   ======================= */
 
 app.use('/api/company', companyRoutes);
 
-// Routes
+/* =======================
+   TEST ROUTES
+   ======================= */
+
 app.get('/', (req, res) => {
-    res.send("API is working");
+  res.send("API is working");
 });
 
 app.get("/debug-sentry", function mainHandler(req, res) {
   throw new Error("My first Sentry error!");
 });
 
-// app.post('/webhooks', clerkWebhooks);
-
 /* =======================
-   ORIGINAL CODE (COMMENTED)
-   ======================= */
-
-// PORT is NOT used in Vercel
-// const PORT = process.env.PORT || 5000;
-
-// ❌ Vercel does not allow app.listen()
-// app.listen(PORT, () => {
-//     console.log("server is listening on port " + PORT);
-// });
-
-/* =======================
-   CORRECT SERVERLESS END
+   SENTRY ERROR HANDLER
    ======================= */
 
 Sentry.setupExpressErrorHandler(app);
 
-// ✅ Export app for Vercel
+/* =======================
+   LOCAL DEV SERVER
+   ======================= */
+
+if (process.env.NODE_ENV !== "production") {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log("Server running on port " + PORT);
+  });
+}
+
+/* =======================
+   VERCEL EXPORT
+   ======================= */
+
 export default app;
