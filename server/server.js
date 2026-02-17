@@ -7,6 +7,7 @@ import * as Sentry from "@sentry/node"
 import { clerkWebhooks } from './controller/webhooks.js';
 import companyRoutes from './routes/companyRoutes.js'
 import connectCloudinary from './config/cloudinary.js';
+import jobRouter from './routes/jobRoutes.js';
 
 // initialize express
 const app = express();
@@ -40,6 +41,7 @@ app.post(
    ======================= */
 
 app.use('/api/company', companyRoutes);
+app.use('/api/jobs', jobRouter);
 
 /* =======================
    TEST ROUTES
