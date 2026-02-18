@@ -77,8 +77,14 @@ const JobListing = () => {
                     <ul className='space-y-2 text-gray-600'>
                         {JobCategories.map((category, index) => {
                             return (
-                                <li key={index} className='flex gap-3 items-center'>
-                                    <input onClick={() => handleCategories(category)} checked={selectedCategories.includes(category)} className='scale-125' type="checkbox" name="" id={`category-${index}`} />
+                                <li key={category} className='flex gap-3 items-center'>
+                                    <input
+                                        onChange={() => handleCategories(category)}
+                                        checked={selectedCategories.includes(category)}
+                                        className='scale-125'
+                                        type="checkbox"
+                                        id={`category-${index}`}
+                                    />
                                     <label htmlFor={`category-${index}`}>{category}</label>
                                 </li>
                             );
@@ -91,8 +97,14 @@ const JobListing = () => {
                     <ul className='space-y-2 text-gray-600'>
                         {JobLocations.map((location, index) => {
                             return (
-                                <li key={index} className='flex gap-3 items-center'>
-                                    <input onClick={() => handleLocations(location)} checked={selectedLocations.includes(location)} className='scale-125' type="checkbox" name="" id={`location-${index}`} />
+                                <li key={location} className='flex gap-3 items-center'>
+                                    <input
+                                        onChange={() => handleLocations(location)}
+                                        checked={selectedLocations.includes(location)}
+                                        className='scale-125'
+                                        type="checkbox"
+                                        id={`location-${index}`}
+                                    />
                                     <label htmlFor={`location-${index}`}>{location}</label>
                                 </li>
                             );
@@ -106,7 +118,8 @@ const JobListing = () => {
                 <div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4'>
                     {
                         filteredJobs.slice((currentPage - 1) * 6, currentPage * 6).map((job, index) => {
-                            return (<JobCard key={index} job={job} />)
+                            const jobKey = job._id || job.id || `${job.title}-${index}`;
+                            return (<JobCard key={jobKey} cardKey={jobKey} job={job} />)
                         })
                     }
                 </div>
@@ -117,7 +130,7 @@ const JobListing = () => {
                             <img src={assets.left_arrow_icon} alt="" />
                         </a>
                         {Array.from({ length: Math.ceil(filteredJobs.length / 6) }).map((_, index) => (
-                            <a href="#job-list">
+                            <a key={`page-${index}`} href="#job-list">
                                 <button onClick={() => setCurrentPage(index + 1)} className={`flex items-center justify-center rounded border border-gray-300 w-10 h-10 ${currentPage === index + 1 ? "bg-blue-100 text-blue-500" : "text-gray-500"}`}>{index + 1}</button>
                             </a>
                         ))}

@@ -2,12 +2,12 @@ import React from 'react'
 import { assets } from '../assets/assets'
 import { useNavigate } from 'react-router-dom'
 
-const JobCard = ({ key, job }) => {
+const JobCard = ({ job, cardKey }) => {
 
   const navigate = useNavigate();
 
   return (
-    <div key={key} className='border border-grey-200 shadow-md p-6 rounded-md'>
+    <div data-card-key={cardKey} className='border border-grey-200 shadow-md p-6 rounded-md'>
       <div className='flex justify-between items-center'>
         <img className='h-8' src={assets.company_icon} alt="" />
       </div>

@@ -7,11 +7,13 @@ import Job from "../models/Job.js";
 
 // Register a new company
 export const registerCompany = async (req, res) => {
-  const { name, email, pass } = req.body;
+  const { name, email, pass, password } = req.body;
+
+  const plainPassword = pass || password;
 
   const imgFile = req.file;
 
-  if (!name || !email || !pass || !imgFile) {
+  if (!name || !email || !plainPassword || !imgFile) {
     return res.json({ success: false, message: "Missing details" });
   }
 
@@ -23,7 +25,7 @@ export const registerCompany = async (req, res) => {
     }
 
     const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(pass, salt);
+    const hashPassword = await bcrypt.hash(plainPassword, salt);
 
     const imgUpload = await cloudinary.uploader.upload(
       `data:${imgFile.mimetype};base64,${imgFile.buffer.toString("base64")}`,
@@ -55,32 +57,39 @@ export const registerCompany = async (req, res) => {
 
 // Company login
 export const loginCompany = async (req, res) => {
-  const { email, pass } = req.body;
-
   try {
-    const company = await Company.findOne({ email });
-    if (bcrypt.compare(pass, company.password)) {
-      res.json({
-        success: true,
-        company: {
-          _id: company._id,
-          name: company.name,
-          email: company.email,
-          image: company.image,
-        },
+    const { email, pass, password } = req.body || {};
+    const plainPassword = pass || password;
 
-        token: generateToken(company._id),
-      });
-    } else {
-      res.json({
-        success: false,
-        message: "Invalid password",
-      });
+    if (!email || !plainPassword) {
+      return res.status(400).json({ success: false, message: "Email and password are required" });
     }
+
+    const company = await Company.findOne({ email });
+    if (!company) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+
+    const isPasswordValid = await bcrypt.compare(plainPassword, company.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ success: false, message: "Invalid credentials" });
+    }
+
+    return res.status(200).json({
+      success: true,
+      company: {
+        _id: company._id,
+        name: company.name,
+        email: company.email,
+        image: company.image,
+      },
+      token: generateToken(company._id),
+    });
   } catch (error) {
-    res.json({
+    console.error("Company login failed", error);
+    return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Unable to login at the moment",
     });
   }
 };

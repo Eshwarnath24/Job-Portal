@@ -15,6 +15,9 @@ import Applications from './pages/Applications'
 
 import "quill/dist/quill.snow.css";
 
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const App = () => {
 
@@ -23,6 +26,7 @@ const App = () => {
   return (
     <div>
       {showRecruiterLogin && <RecrutierLogin />}
+      <ToastContainer />
       <Routes>
         <Route path='/' element={<HomePage />} />
         <Route path='/apply-job/:id' element={<ApplyJob />} />
