@@ -19,6 +19,18 @@ const app = express();
    ======================= */
 
 app.use(cors());
+
+/* =======================
+   CLERK WEBHOOK (RAW BODY)
+   IMPORTANT: Must be before express.json()
+   ======================= */
+
+app.post(
+  '/webhooks',
+  express.raw({ type: 'application/json' }),
+  clerkWebhooks
+);
+
 app.use(express.json());
 app.use(clerkMiddleware())
 
@@ -28,16 +40,6 @@ app.use(clerkMiddleware())
 
 connectDB();
 connectCloudinary();
-
-/* =======================
-   CLERK WEBHOOK (RAW BODY)
-   ======================= */
-
-app.post(
-  '/webhooks',
-  express.raw({ type: 'application/json' }),
-  clerkWebhooks
-);
 
 /* =======================
    API ROUTES
