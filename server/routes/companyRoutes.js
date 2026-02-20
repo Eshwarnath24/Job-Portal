@@ -35,6 +35,6 @@ router.get("/list-jobs", protectCompany, getCompanyPostedJobs);
 router.get("/change-status", protectCompany, changeApplicantsStatus);
 
 // change applications visiblity
-router.get("/change-visibility", protectCompany, changeJobVisiblity);
+router.post("/change-visibility", protectCompany, changeJobVisiblity);
 
 export default router;

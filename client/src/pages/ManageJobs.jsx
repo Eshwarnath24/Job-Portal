@@ -1,11 +1,65 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { manageJobsData } from '../assets/assets'
 import moment from 'moment'
 import { useNavigate } from 'react-router-dom'
+import { AppContext } from '../context/AppContext'
+import { toast } from 'react-toastify'
+import axios from 'axios'
 
 const ManageJobs = () => {
 
   const navigate = useNavigate();
+
+  const [jobs, setJobs] = useState([])
+
+  const { backendUrl, companyToken } = useContext(AppContext)
+
+  // Function to fetch company Job Applications data
+  const fetchCompanyJobs = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + '/api/company/list-jobs',
+        { headers: { token: companyToken } }
+      )
+
+      if (data.success) {
+        setJobs(data.jobsData.reverse());
+        console.log(data.jobsData);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
+  // Function to change Job Visibility
+  const changeJobVisiblity = async (id) => {
+
+    try {
+
+      const { data } = await axios.post(backendUrl + '/api/company/change-visibility',
+        { id }, { headers: { token: companyToken } }
+      )
+
+      if (data.success) {
+        toast.success(data.message);
+        fetchCompanyJobs();
+
+      } else {
+        toast.error(data.message);
+
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  }
+
+  useEffect(() => {
+    if (companyToken) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      fetchCompanyJobs();
+    }
+  }, [companyToken])
 
   return (
     <div className="container p-4 max-w-5xl">
@@ -24,10 +78,10 @@ const ManageJobs = () => {
           </thead>
 
           <tbody>
-            {manageJobsData.map((job) => (
+            {jobs && jobs.map((job, index) => (
               <tr key={job._id} className="border-b text-gray-700 hover:bg-gray-50">
-                
-                <td className="py-2 px-4 text-left">{job._id}</td>
+
+                <td className="py-2 px-4 text-left">{index + 1}</td>
                 <td className="py-2 px-4 text-left">{job.title}</td>
                 <td className="py-2 px-4 text-left max-sm:hidden">{moment(job.date).format('ll')}</td>
                 <td className="py-2 px-4 text-left max-sm:hidden">{job.location}</td>
@@ -35,6 +89,7 @@ const ManageJobs = () => {
 
                 <td className="py-2 px-4 text-left">
                   <input
+                    onClick={() => changeJobVisiblity(job._id)}
                     type="checkbox"
                     checked={job.visible}
                     readOnly

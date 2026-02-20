@@ -4,6 +4,7 @@ import generateToken from "../utils/generateToken.js";
 import { v2 as cloudinary } from "cloudinary";
 import { json } from "express";
 import Job from "../models/Job.js";
+import JobApplication from "../models/JobApplication.js";
 
 // Register a new company
 export const registerCompany = async (req, res) => {
@@ -62,17 +63,26 @@ export const loginCompany = async (req, res) => {
     const plainPassword = pass || password;
 
     if (!email || !plainPassword) {
-      return res.status(400).json({ success: false, message: "Email and password are required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Email and password are required" });
     }
 
     const company = await Company.findOne({ email });
     if (!company) {
-      return res.status(401).json({ success: false, message: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
-    const isPasswordValid = await bcrypt.compare(plainPassword, company.password);
+    const isPasswordValid = await bcrypt.compare(
+      plainPassword,
+      company.password,
+    );
     if (!isPasswordValid) {
-      return res.status(401).json({ success: false, message: "Invalid credentials" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid credentials" });
     }
 
     return res.status(200).json({
@@ -140,7 +150,15 @@ export const getCompanyPostedJobs = async (req, res) => {
     const companyId = req.company._id;
     const jobs = await Job.find({ companyId });
 
-    res.json({ success: true, jobsData: jobs });
+    // add no of applicant applied to given job opp
+    const jobsData = await Promise.all(
+      jobs.map(async (job) => {
+        const applicants = await JobApplication.find({ jobId: job._id });
+        return { ...job.toObject(), applicants: applicants.length };
+      }),
+    );
+
+    res.json({ success: true, jobsData });
   } catch (error) {
     res.json({ success: false, jobsData: error.message });
   }
