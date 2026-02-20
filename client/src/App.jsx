@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes, Navigate } from 'react-router-dom'
 
 import HomePage from './pages/HomePage'
 import ApplyJob from './pages/ApplyJob'
@@ -21,7 +21,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
 
-  const { showRecruiterLogin } = useContext(AppContext);
+  const { showRecruiterLogin, companyToken } = useContext(AppContext);
 
   return (
     <div>
@@ -31,10 +31,18 @@ const App = () => {
         <Route path='/' element={<HomePage />} />
         <Route path='/apply-job/:id' element={<ApplyJob />} />
         <Route path='/applied-jobs' element={<AppliedJobs />} />
-        <Route path='/dashboard' element={<Dashboard />} >
-          <Route path='add-job' element={<AddJob />} />
-          <Route path='manage-jobs' element={<ManageJobs />} />
-          <Route path='view-applications' element={<Applications />} />
+        <Route path='/dashboard' element={<Dashboard />}>
+          {
+            companyToken ?
+              <>
+                <Route path='add-job' element={<AddJob />} />
+                <Route path='manage-jobs' element={<ManageJobs />} />
+                <Route path='view-applications' element={<Applications />} />
+              </>
+              : null
+          }
+
+
         </Route>
       </Routes>
     </div>

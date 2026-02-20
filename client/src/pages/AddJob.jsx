@@ -1,6 +1,9 @@
 import Quill from 'quill';
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { JobCategories, JobLocations } from '../assets/assets';
+import axios from 'axios';
+import { AppContext } from '../context/AppContext';
+import { toast } from 'react-toastify';
 
 const AddJob = () => {
 
@@ -9,13 +12,49 @@ const AddJob = () => {
   const [category, setCategory] = useState('Programming');
   const [level, setLevel] = useState('Beginner level');
   const [salary, setSalary] = useState(0);
-  const [description, setDescription] = useState('');
 
   const editorRef = useRef(null);
   const quillRef = useRef(null);
 
+  const { backendUrl, companyToken } = useContext(AppContext);
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault()
+
+    try {
+
+      const descriptionHtml = quillRef.current?.root?.innerHTML || ''
+
+      const tempContainer = document.createElement('div')
+      tempContainer.innerHTML = descriptionHtml
+      const plainText = tempContainer.textContent?.trim() || ''
+
+      if (!plainText) {
+        return toast.error('Please add a job description')
+      }
+
+      const { data } = await axios.post(
+        backendUrl + '/api/company/post-job',
+        { title, description: descriptionHtml, location, salary, category, level },
+        { headers: { token: companyToken } }
+      )
+
+      if (data.success) {
+        toast.success(data.message || 'Job posted successfully')
+        setTitle('')
+        setSalary(0)
+        quillRef.current.root.innerHTML = ""
+      } else {
+        toast.error(data.message)
+      }
+
+    } catch (error) {
+      toast.error(error.message)
+    }
+
+  }
+
   useEffect(() => {
-    // Initiate Quill only once
     if (!quillRef.current && editorRef.current) {
       quillRef.current = new Quill(editorRef.current, {
         theme: 'snow',
@@ -29,19 +68,18 @@ const AddJob = () => {
         placeholder: 'Type the job description here...'
       })
 
-      // Sync initial content to state and listen for changes
-      setDescription(quillRef.current.root.innerHTML)
-      const handleChange = () => setDescription(quillRef.current.root.innerHTML)
-      quillRef.current.on('text-change', handleChange)
-      return () => {
-        quillRef.current.off('text-change', handleChange)
-      }
+      const Delta = Quill.import('delta')
+
+      quillRef.current.clipboard.addMatcher(Node.ELEMENT_NODE, (node) => {
+        const text = node.textContent || ''
+        return new Delta().insert(text)
+      })
     }
-  }, []) // The dependency array ensures it runs once on mount
+  }, [])
 
   return (
     <div className="min-h-screen w-full flex justify-start py-10 px-4">
-      <form onSubmit={(e) => e.preventDefault()} className="w-full max-w-3xl space-y-5">
+      <form onSubmit={onSubmitHandler} className="w-full max-w-3xl space-y-5">
         <div>
           <label className="text-sm font-medium">Job Title</label>
           <input
@@ -107,7 +145,6 @@ const AddJob = () => {
         <div className="flex items-center gap-3">
           <button
             type="submit"
-            onClick={() => console.log({ title, description, category, location, level, salary })}
             className="bg-black text-white px-8 py-2 rounded-md hover:opacity-90"
           >
             ADD
