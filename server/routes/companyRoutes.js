@@ -7,6 +7,7 @@ import {
   loginCompany,
   postJob,
   registerCompany,
+  getCompanyJobApplicants,
 } from "../controller/companyController.js";
 import upload from "../config/multer.js";
 import { protectCompany } from "../middleware/authMiddleware.js";
@@ -26,13 +27,13 @@ router.get("/company", protectCompany, getCompanyData);
 router.post("/post-job", protectCompany, postJob);
 
 // get data from company
-router.get("/applicants", protectCompany, getCompanyData);
+router.get("/applicants", protectCompany, getCompanyJobApplicants);
 
 // get company job list
 router.get("/list-jobs", protectCompany, getCompanyPostedJobs);
 
 // change application status
-router.get("/change-status", protectCompany, changeApplicantsStatus);
+router.post("/change-status", protectCompany, changeApplicantsStatus);
 
 // change applications visiblity
 router.post("/change-visibility", protectCompany, changeJobVisiblity);

@@ -1,7 +1,7 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
-import { assets, jobsApplied } from '../assets/assets';
+import { assets } from '../assets/assets';
 import moment from 'moment';
 import { useAuth, useUser } from "@clerk/clerk-react";
 import { toast } from 'react-toastify';
@@ -17,7 +17,7 @@ const AppliedJobs = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [resume, setResume] = useState(null);
 
-  const { backendUrl, userData, userApplications, fetchUserData } = useContext(AppContext);
+  const { backendUrl, userData, userApplications, fetchUserData, fetchUserApplications } = useContext(AppContext);
 
   const updateResume = async () => {
     try {
@@ -45,6 +45,12 @@ const AppliedJobs = () => {
     setResume(null);
   }
 
+  useEffect(() => {
+    if (user) {
+      fetchUserApplications();
+    }
+  }, [user]);
+
   return (
     <>
       <Navbar />
@@ -66,7 +72,7 @@ const AppliedJobs = () => {
               </>
               : <div className='flex gap-2'>
                 <a
-                  href={userData?.resume}
+                  href={userData.resume}
                   target="_blank"
                   rel="noopener noreferrer"
                   className='bg-blue-100 text-blue-600 px-4 py-2 rounded-lg'
