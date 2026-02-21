@@ -18,7 +18,13 @@ const app = express();
    GLOBAL MIDDLEWARE
    ======================= */
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://job-portal-client-eight-wheat.vercel.app"
+  ],
+  credentials: true
+}));
 
 /* =======================
    CLERK WEBHOOK (RAW BODY)
