@@ -58,7 +58,7 @@ const ManageJobs = () => {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchCompanyJobs();
     }
-  }, [companyToken])
+  }, [companyToken, jobs]);
 
   return (
     <div className="container p-4 max-w-5xl">

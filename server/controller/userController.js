@@ -81,19 +81,29 @@ export const updateUserResume = async (req, res) => {
   try {
     const { userId } = req.auth();
 
-    const resumeFile = req.resumeFile;
+    const resumeFile = req.file;
 
     const userData = await User.findById(userId);
 
-    if (resumeFile) {
-      const resumeUpload = await cloudinary.uploader.upload(resumeFile.path);
-      userData.resume = resumeUpload.secure_url;
+    if (!resumeFile) {
+      return res.json({ success: false, message: "Resume file missing" });
     }
+
+    const resumeUpload = await cloudinary.uploader.upload(
+      `data:${resumeFile.mimetype};base64,${resumeFile.buffer.toString("base64")}`,
+      {
+        resource_type: "auto",
+        public_id: resumeFile.originalname.split(".")[0],
+        use_filename: true,
+        unique_filename: false,
+      },
+    );
+
+    userData.resume = resumeUpload.secure_url;
 
     await userData.save();
 
     return res.json({ success: true, message: "Resume Updated" });
-
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
