@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react'
 import { Outlet, useNavigate, NavLink } from 'react-router-dom'
 import { assets } from '../assets/assets'
 import { AppContext } from '../context/AppContext';
+import Seo from '../components/Seo';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -25,6 +26,12 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      <Seo
+        title='Recruiter Dashboard | Job Portal'
+        description='Recruiter dashboard for managing jobs and applications.'
+        canonicalPath='/dashboard'
+        noIndex={true}
+      />
 
       <div className="shadow py-4">
         <div className="px-5 flex justify-between items-center">

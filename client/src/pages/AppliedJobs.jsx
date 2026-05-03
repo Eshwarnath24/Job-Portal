@@ -7,6 +7,7 @@ import { useAuth, useUser } from "@clerk/clerk-react";
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { AppContext } from '../context/AppContext';
+import Seo from '../components/Seo';
 
 const AppliedJobs = () => {
 
@@ -53,6 +54,12 @@ const AppliedJobs = () => {
 
   return (
     <>
+      <Seo
+        title='My Applied Jobs | Job Portal'
+        description='Track your applications and manage your resume in your Job Portal account.'
+        canonicalPath='/applied-jobs'
+        noIndex={true}
+      />
       <Navbar />
       <div className='container px-4 min-h-[65vh] 2xl:px-20 mx-auto my-10'>
         <h2 className='text-xl font-semibold'>Your Resume</h2>

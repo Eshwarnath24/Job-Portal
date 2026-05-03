@@ -11,6 +11,17 @@ import moment from 'moment';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from '@clerk/clerk-react';
+import Seo from '../components/Seo';
+
+const stripHtml = (content = '') => content.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+
+const clampText = (content = '', max = 160) => {
+  if (content.length <= max) {
+    return content;
+  }
+
+  return `${content.slice(0, max - 1).trim()}...`;
+};
 
 const ApplyJob = () => {
   const { id } = useParams();
@@ -92,6 +103,49 @@ const ApplyJob = () => {
 
   return (
     <>
+      {jobData && (
+        <Seo
+          title={`${jobData.title} at ${jobData.companyId?.name} | Job Portal`}
+          description={clampText(stripHtml(jobData.description), 155)}
+          canonicalPath={`/apply-job/${jobData._id}`}
+          ogType='article'
+          imagePath={jobData.companyId?.image || '/vite.svg'}
+          jsonLd={{
+            '@context': 'https://schema.org',
+            '@type': 'JobPosting',
+            title: jobData.title,
+            description: stripHtml(jobData.description),
+            identifier: {
+              '@type': 'PropertyValue',
+              name: 'Job Portal',
+              value: jobData._id
+            },
+            datePosted: new Date(jobData.date).toISOString(),
+            employmentType: 'FULL_TIME',
+            hiringOrganization: {
+              '@type': 'Organization',
+              name: jobData.companyId?.name,
+              logo: jobData.companyId?.image
+            },
+            jobLocation: {
+              '@type': 'Place',
+              address: {
+                '@type': 'PostalAddress',
+                addressLocality: jobData.location
+              }
+            },
+            baseSalary: {
+              '@type': 'MonetaryAmount',
+              currency: 'INR',
+              value: {
+                '@type': 'QuantitativeValue',
+                value: jobData.salary,
+                unitText: 'YEAR'
+              }
+            }
+          }}
+        />
+      )}
       <Navbar />
       {
         jobData ?
