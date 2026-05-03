@@ -55,6 +55,10 @@ app.use('/api/company', companyRoutes);
 app.use('/api/jobs', jobRouter);
 app.use('/api/users', userRouter);
 
+app.get('/sitemap.xml', (req, res) => {
+   return res.redirect(302, '/api/jobs/sitemap.xml');
+});
+
 /* =======================
    TEST ROUTES
    ======================= */

@@ -4,6 +4,10 @@
       "handle": "filesystem"
     },
     {
+      "src": "/sitemap.xml",
+      "dest": "https://job-portal-new-server-lilac.vercel.app/api/jobs/sitemap.xml"
+    },
+    {
       "src": "/(.*)",
       "dest": "/"
     }
